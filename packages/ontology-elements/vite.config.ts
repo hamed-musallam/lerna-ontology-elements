@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 
 import vue from '@vitejs/plugin-vue'
+import typescript2 from 'rollup-plugin-typescript2'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,7 +11,19 @@ export default defineConfig({
     'process.env': process.env
   },
   plugins: [
-    vue()
+    vue(),
+    typescript2({
+      check: false,
+      include: ['src/components/*.vue'],
+      tsconfigOverride: {
+        compilerOptions: {
+          sourceMap: true,
+          declaration: true,
+          declarationMap: true
+        },
+        exclude: ['vite.config.ts', 'main.ts']
+      }
+    })
   ],
   resolve: {
     alias: {
@@ -18,16 +31,23 @@ export default defineConfig({
     }
   },
   build: {
+    cssCodeSplit: false,
     lib: {
-      entry: "./src/ontology-elements.js",
-      formats: ["es", "cjs"],
-      name: "ViwerPlugin",
-      fileName: (format) => (format === "es" ? "index.js" : "index.cjs"),
+      entry: './src/OntologyElements.js',
+      formats: ['es', 'cjs'],
+      name: 'OntologyElements',
+      fileName: (format) => (format === 'es' ? 'index.js' : 'index.cjs')
+    },
+    rollupOptions: {
+      external: ['vue'],
+      output: {
+        globals: {
+          vue: 'Vue'
+        }
+      }
     },
     sourcemap: true,
-    // Reduce bloat from legacy polyfills.
-    target: "esnext",
-    // Leave minification up to applications.
-    minify: true,
-  },
+    target: 'esnext',
+    minify: true
+  }
 })
