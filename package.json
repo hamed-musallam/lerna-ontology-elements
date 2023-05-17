@@ -5,12 +5,14 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.33.0",
     "lerna": "^6.6.2"
   },
   "scripts": {
     "ontology-dep": "lerna exec --scope ontology-elements npm i",
     "build": "npm run ontology-dep && lerna exec --scope ontology-elements -- npm run build",
     "dep": "lerna exec --scope={react-app,angular-app} npm i",
-    "start": "npm run dep && lerna exec --scope={react-app,angular-app} npm run start"
+    "start": "npm run dep && lerna exec --scope={react-app,angular-app} npm run start",
+    "test": "npx playwright test"
   }
 }
